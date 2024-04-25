@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput, Button, HelperText, Text } from "react-native-paper";
-import { gStyle } from "../../styles/styles";
 import { auth } from "../../firebase/auth";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
@@ -14,7 +12,6 @@ function LoginPage() {
   const navigator = useNavigation();
   const { t } = useTranslation();
   const { error, setError } = useErrorAlert();
-  const [signInWithGoogle, user, loading, errorG] = useSignInWithGoogle(auth);
 
   const loginForm = useFormik({
     initialValues: {
@@ -45,12 +42,21 @@ function LoginPage() {
   });
 
   return (
-    <ScrollView style={gStyle.main}>
-      <View style={gStyle.loginPage__container}>
+    <ScrollView style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          padding: 10,
+          alignItems: "center",
+          gap: 35,
+        }}
+      >
         <Text variant="headlineMedium">{t("login.login")}</Text>
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
             label={t("login.email")}
             error={loginForm.touched.email && !!loginForm.errors.email}
@@ -65,14 +71,22 @@ function LoginPage() {
             onChangeText={loginForm.handleChange("email")}
           />
           {loginForm.touched.email && !!loginForm.errors.email && (
-            <HelperText style={gStyle.loginPage__helperText} type="error">
+            <HelperText
+              style={{
+                position: "absolute",
+                bottom: -25,
+              }}
+              type="error"
+            >
               {loginForm.errors.email}
             </HelperText>
           )}
         </View>
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
             error={loginForm.touched.password && !!loginForm.errors.password}
             label={t("login.password")}
@@ -81,7 +95,13 @@ function LoginPage() {
             onBlur={loginForm.handleBlur("password")}
           />
           {loginForm.touched.password && !!loginForm.errors.password && (
-            <HelperText style={gStyle.loginPage__helperText} type="error">
+            <HelperText
+              style={{
+                position: "absolute",
+                bottom: -25,
+              }}
+              type="error"
+            >
               {loginForm.errors.password}
             </HelperText>
           )}

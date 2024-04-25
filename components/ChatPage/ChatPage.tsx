@@ -12,7 +12,7 @@ import {
   useCollectionData,
   useDocumentData,
 } from "react-firebase-hooks/firestore";
-import { MessagesList } from "./ChatList";
+import { ChatList } from "./ChatList";
 import { ChatFooter } from "./ChatFooter";
 import { sendMessage, sendImages } from "../../firebase/util/message_utils";
 import { useAuthUser } from "../CustomeComponent/useAuthUser";
@@ -48,6 +48,7 @@ function ChatPage({ route, navigation }) {
       [authUser.uid]: status,
     });
   };
+  console.log(chatData)
 
   const handleSendMessage = async (message: string, imageList: Array<any>) => {
     try {
@@ -79,7 +80,7 @@ function ChatPage({ route, navigation }) {
     <View
       style={{ flex: 1, justifyContent: "space-between", flexWrap: "nowrap" }}
     >
-      <MessagesList list={messagesList} chatData={chatData as any} />
+      <ChatList list={messagesList} chatData={chatData as any} />
       <ChatFooter
         isAuthUserTyping={!!isUsersTyping[authUser.uid]}
         handleSetTypingStatus={setIsAuthUserTypingStatus}

@@ -20,6 +20,7 @@ function HeaderTitle({ displayName, photoURL, userId }) {
   const [isOnlineSnapShot, loading, error] = useObjectVal<IisOnlineSnapShot>(
     ref(realTimeDB, `${USERS_D}/${userId}/${PRESENT}`)
   );
+
   const [lastVisitMessage, setLastVisitMessage] = useState<string>("");
 
   const { t } = useTranslation();

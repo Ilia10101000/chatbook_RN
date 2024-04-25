@@ -30,6 +30,7 @@ i18n.use(initReactI18next).init({
           changeEmail: "Змінити електронну адресу",
         },
         signin: {
+          signin: "Створити обліковий запис",
           fill: "Заповніть поля",
           selectAvatar: "Натисніть, щоб вибрати фото",
           nextStepButton: "Далі",
@@ -45,7 +46,7 @@ i18n.use(initReactI18next).init({
           hideComment: "Приховати коментарі",
           showComment: "Показати коментарі",
           postDesc: "Додайте опис публікації...",
-          confirmDelete: "Підтвердьте видалення фото!",
+          confirmDelete: "Видалити фото?",
         },
         drawerInner: {
           news: "Новини",
@@ -161,6 +162,7 @@ i18n.use(initReactI18next).init({
           google: "Login with Google",
         },
         signin: {
+          signin: "Create account",
           fill: "Fill the fields",
           selectAvatar: "Press to select photo",
           nextStepButton: "Next step",
@@ -176,7 +178,7 @@ i18n.use(initReactI18next).init({
           hideComment: "Hide comments",
           showComment: "Show comments",
           postDesc: "Add post description...",
-          confirmDelete: "Confirm delete photo!",
+          confirmDelete: "Delete photo?",
         },
         drawerInner: {
           news: "News",

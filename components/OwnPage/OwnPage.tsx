@@ -1,6 +1,5 @@
 import React from "react";
 import { ScrollView, View, Text } from "react-native";
-import { gStyle } from "../../styles/styles";
 import { useAuthUser } from "..//CustomeComponent/useAuthUser";
 import { PersonalData } from "./PersonalData";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -22,21 +21,38 @@ function OwnPage({ route }) {
 
   if (loadingU) {
     return (
-      <View style={[gStyle.main, gStyle.centered]}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text>Loading</Text>
       </View>
     );
   }
   if (errorLoadingU) {
     return (
-      <View style={[gStyle.main, gStyle.centered]}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text>Some Error occured. Try again</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={[gStyle.main, gStyle.ownPage__container]}>
+    <ScrollView
+      style={{
+        flex: 1,
+        padding: 10,
+      }}
+    >
       <View style={{ marginBottom: 15 }}>
         <PersonalData authUser={user as User} />
       </View>

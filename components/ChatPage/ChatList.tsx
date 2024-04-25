@@ -23,7 +23,7 @@ interface IChatList {
   };
 }
 
-function MessagesList({ list, chatData }: IChatList) {
+function ChatList({ list, chatData }: IChatList) {
   const authUser = useAuthUser();
   const [showImage, setShowImage] = useState<string | null>(null);
   const [imageDimensions, setImageDimensions] = useState({
@@ -122,7 +122,6 @@ function MessagesList({ list, chatData }: IChatList) {
                 source: { width, height },
               },
             }) => {
-              console.log(width, height);
               setImageSize({ width, height });
             }}
             source={{ uri: showImage }}
@@ -137,4 +136,4 @@ function MessagesList({ list, chatData }: IChatList) {
   );
 }
 
-export { MessagesList };
+export { ChatList };

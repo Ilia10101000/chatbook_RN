@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Image, View, Animated } from "react-native";
 import { TextInput, FAB } from "react-native-paper";
-import { gStyle } from "../../styles/styles";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
 
@@ -103,12 +102,16 @@ function ChatFooter({
         </View>
       )}
       {isCompanionTyping && (
-        <View style={{position:'absolute', top:-25,left:5}}>
+        <View style={{ position: "absolute", top: -25, left: 5 }}>
           <TypingPlaceholder name={isCompanionTyping} />
         </View>
       )}
       <TextInput
-        style={gStyle.chatPage__input}
+        style={{
+          backgroundColor: "#dfe3ee",
+          maxHeight: 100,
+          width: "100%",
+        }}
         multiline={true}
         activeUnderlineColor="#3b5998"
         placeholder={t("messagePage.write")}

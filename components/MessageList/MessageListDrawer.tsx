@@ -8,7 +8,6 @@ import { collection } from 'firebase/firestore';
 import { db } from '../../firebase/auth';
 import { View } from 'react-native';
 import {MessageListItem} from './MassageListItem'
-import { gStyle } from '../../styles/styles';
 
 interface IGotToChat{
   chatId: string;
@@ -23,7 +22,8 @@ function MessageListDrawer() {
   const navigation = useNavigation();
 
   const goToChatPage = ({ chatId, companionData }: IGotToChat) => {
-    navigation.navigate("ChatPage", { chatId, user: companionData });
+    //@ts-ignore
+    navigation.navigate("ChatPage", { chatId, user: companionData }) ;
   };
   
 
@@ -40,7 +40,7 @@ function MessageListDrawer() {
     );
   }
   return (
-    <View style={[gStyle.ownPage__container, {gap:10}]}>
+    <View style={{padding:10, gap:10}}>
       {existingChatsList.map(item => <MessageListItem key={item.companion} handlePress={goToChatPage} companion={item.companion} chatId={item.chatId} isHasNewMessage={item.isHasNewMessage} />)}
     </View>
   )

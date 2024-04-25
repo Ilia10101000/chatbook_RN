@@ -12,7 +12,6 @@ import { db, realTimeDB } from "../../firebase/auth";
 import { doc } from "firebase/firestore";
 import { ref } from "firebase/database";
 import { UserAvatar } from "../CustomeComponent/UserAvatar";
-import { gStyle } from "../../styles/styles";
 
 type IisOnlineSnapShot = {
   isOnline: boolean;
@@ -37,8 +36,27 @@ function MessageListItem({ companion, chatId, isHasNewMessage, handlePress}) {
   const textWidth = Dimensions.get('window').width - 105;
   
   return (
-    <Pressable onPress={() => handlePress({chatId,companionData:{displayName:user?.displayName, photoURL:user?.photoURL, id:user?.id}})}>
-      <View style={[gStyle.avatar_space, { flexDirection: "row" }]}>
+    <Pressable
+      onPress={() =>
+        handlePress({
+          chatId,
+          companionData: {
+            displayName: user?.displayName,
+            photoURL: user?.photoURL,
+            id: user?.id,
+          },
+        })
+      }
+    >
+      <View
+        style={
+          {
+            maxHeight: "100%",
+            overflow: "hidden",
+            flexDirection: "row",
+          }
+        }
+      >
         <View>
           <UserAvatar
             displayName={user.displayName}

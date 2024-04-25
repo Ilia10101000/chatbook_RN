@@ -1,9 +1,15 @@
 import React, { createContext } from "react";
 import { PaperProvider, Text, ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { NavigationContainer, ParamListBase, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationOptions, createNativeStackNavigator } from "@react-navigation/native-stack";
-import { gStyle } from "./styles/styles";
+import {
+  NavigationContainer,
+  ParamListBase,
+  RouteProp,
+} from "@react-navigation/native";
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 import { HomePage } from "./components/HomePage/HomePage";
 import { LoginPage } from "./components/LoginPage/LoginPage";
@@ -19,12 +25,13 @@ const Stack = createNativeStackNavigator();
 export const AuthUserContext = createContext<User>(null);
 LogBox.ignoreLogs(["Require cycle"]);
 
-type OptionsType =  NativeStackNavigationOptions
+type OptionsType =
+  | NativeStackNavigationOptions
   | ((props: {
       route: RouteProp<ParamListBase, any>;
       navigation: any;
-  }) => NativeStackNavigationOptions);
-    
+    }) => NativeStackNavigationOptions);
+
 type OptionsParams = {
   name: string;
   component: any;
@@ -42,8 +49,7 @@ const authorizedScreens: Array<OptionsParams> = [
   {
     name: "ChatPage",
     component: ChatPage,
-    options: ({ route, navigation }:any) => {
-
+    options: ({ route, navigation }: any) => {
       return {
         headerShown: true,
         headerTitle: () => (
@@ -69,7 +75,8 @@ const unAuthorizedScreens = [
     name: "SigninPage",
     component: SigninPage,
     options: {
-      headerShown: false,
+      headerShown: true,
+      title:''
     },
   },
 ];
@@ -80,22 +87,24 @@ export default function App() {
   if (loading) {
     return (
       <SafeAreaView
-        style={[
-          gStyle.main,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <ActivityIndicator size='large' animating={true} color={"#3b5998"} />
+        <ActivityIndicator size="large" animating={true} color={"#3b5998"} />
       </SafeAreaView>
     );
   }
   if (error) {
     return (
       <SafeAreaView
-        style={[
-          gStyle.main,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <Text>Some error occured. Try again</Text>
       </SafeAreaView>
@@ -109,7 +118,11 @@ export default function App() {
   return (
     <AuthUserContext.Provider value={authUser}>
       <PaperProvider>
-        <SafeAreaView style={gStyle.main}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+          }}
+        >
           <NavigationContainer>
             <Stack.Navigator initialRouteName={initialRouteName}>
               {screens.map(({ name, component, options }) => (

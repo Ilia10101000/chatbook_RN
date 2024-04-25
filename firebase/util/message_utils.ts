@@ -82,6 +82,7 @@ const sendImages = async (
         senderId: authUserId,
         message: "Received images data",
         isReaded: false,
+        received: serverTimestamp(),
       },
     });
   } catch (error) {
@@ -109,6 +110,7 @@ const sendMessage = async (
       senderId: authUserId,
       message,
       isReaded: false,
+      received: serverTimestamp()
     },
   });
 };

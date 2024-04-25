@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View, Pressable } from "react-native";
 import {
   TextInput,
@@ -8,7 +8,6 @@ import {
   FAB,
   Snackbar,
 } from "react-native-paper";
-import { gStyle } from "../../styles/styles";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as ImagePicker from "expo-image-picker";
@@ -23,8 +22,9 @@ import {
 import { useErrorAlert } from "../CustomeComponent/useErrorAlert";
 import { getBlobFroUri } from "../../firebase/util/fs";
 
-function SigninPage() {
+function SigninPage({navigation}) {
   const { t } = useTranslation();
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const { error, setError } = useErrorAlert();
   const signinForm = useFormik({
     initialValues: {
@@ -121,9 +121,25 @@ function SigninPage() {
       setError(error.message);
     }
   };
+  useEffect(() => {
+    navigation.setOptions({
+      title: t("signin.signin"),
+    });
+  },[])
   return (
-    <ScrollView style={gStyle.main}>
-      <View style={gStyle.loginPage__container}>
+    <ScrollView
+      style={{
+        flex: 1,
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          padding: 10,
+          alignItems: "center",
+          gap: 35,
+        }}
+      >
         <Text variant="headlineMedium">{t("signin.fill")}</Text>
         {signinForm.values.photoURL ? (
           <View>
@@ -131,7 +147,11 @@ function SigninPage() {
               source={{
                 uri: signinForm.values.photoURL,
               }}
-              style={gStyle.loginPage__imageContainer}
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: 100,
+              }}
             />
             <FAB
               icon="trash-can"
@@ -148,14 +168,26 @@ function SigninPage() {
         ) : (
           <Pressable
             onPress={pickImage}
-            style={gStyle.loginPage__choosePhotoButton}
+            style={{
+              width: 200,
+              height: 200,
+              justifyContent: "center",
+              alignItems: "center",
+              borderWidth: 3,
+              borderStyle: "dotted",
+              borderColor: "#8c8c8c",
+              borderRadius: 100,
+              padding: 20,
+            }}
           >
             <Text>{t("signin.selectAvatar")}</Text>
           </Pressable>
         )}
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
             error={
               signinForm.touched.displayName && !!signinForm.errors.displayName
@@ -173,14 +205,22 @@ function SigninPage() {
           />
           {signinForm.touched.displayName &&
             !!signinForm.errors.displayName && (
-              <HelperText style={gStyle.loginPage__helperText} type="error">
+              <HelperText
+                style={{
+                  position: "absolute",
+                  bottom: -25,
+                }}
+                type="error"
+              >
                 {signinForm.errors.displayName}
               </HelperText>
             )}
         </View>
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
             label={t("login.email")}
             error={signinForm.touched.email && !!signinForm.errors.email}
@@ -195,15 +235,31 @@ function SigninPage() {
             onBlur={signinForm.handleBlur("email")}
           />
           {signinForm.touched.email && !!signinForm.errors.email && (
-            <HelperText style={gStyle.loginPage__helperText} type="error">
+            <HelperText
+              style={{
+                position: "absolute",
+                bottom: -25,
+              }}
+              type="error"
+            >
               {signinForm.errors.email}
             </HelperText>
           )}
         </View>
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
+            secureTextEntry={secureTextEntry}
+            right={
+              <TextInput.Icon
+                onPress={() => setSecureTextEntry((value) => !value)}
+                forceTextInputFocus={false}
+                icon={secureTextEntry ? "eye-outline" : "eye-off-outline"}
+              />
+            }
             label={t("login.password")}
             error={signinForm.touched.password && !!signinForm.errors.password}
             value={signinForm.values.password}
@@ -211,15 +267,24 @@ function SigninPage() {
             onBlur={signinForm.handleBlur("password")}
           />
           {signinForm.touched.password && !!signinForm.errors.password && (
-            <HelperText style={gStyle.loginPage__helperText} type="error">
+            <HelperText
+              style={{
+                position: "absolute",
+                bottom: -25,
+              }}
+              type="error"
+            >
               {signinForm.errors.password}
             </HelperText>
           )}
         </View>
         <View>
           <TextInput
-            style={[gStyle.loginPage__input]}
+            style={{
+              width: 250,
+            }}
             mode="outlined"
+            secureTextEntry={secureTextEntry}
             label={t("signin.confirmPassword")}
             error={
               signinForm.touched.confirmPassword &&
@@ -231,7 +296,13 @@ function SigninPage() {
           />
           {signinForm.touched.confirmPassword &&
             !!signinForm.errors.confirmPassword && (
-              <HelperText style={gStyle.loginPage__helperText} type="error">
+              <HelperText
+                style={{
+                  position: "absolute",
+                  bottom: -25,
+                }}
+                type="error"
+              >
                 {signinForm.errors.confirmPassword}
               </HelperText>
             )}

@@ -1,42 +1,69 @@
-import React, {useState} from "react";
-import { User, updateProfile, updatePassword } from "firebase/auth";
+import React, { useState } from "react";
+import {
+  User,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
+import { auth } from "../../firebase/auth";
 import { ScrollView, View } from "react-native";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Button, HelperText, TextInput } from "react-native-paper";
-import { useErrorAlert,ErrorAlert } from "../CustomeComponent/useErrorAlert";
 
-function Security({ user }: { user: User }) {
+function Security({
+  user,
+  handleError,
+}: {
+  user: User;
+  handleError: (message: string | "") => void;
+}) {
   const { t } = useTranslation();
-  const { error, setError } = useErrorAlert();
-  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const passwordForm = useFormik({
     initialValues: {
-      password: "",
-      confirmPassword: "",
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
-    initialErrors: { password: "" },
-    onSubmit: async ({password}) => {
+    initialErrors: { newPassword: "" },
+    onSubmit: async ({ oldPassword,newPassword }) => {
       try {
-        await updatePassword(user, password);
+        const credential = EmailAuthProvider.credential(
+          auth.currentUser.email,
+          oldPassword
+        );
+        await reauthenticateWithCredential(auth.currentUser, credential);
+        await updatePassword(user, newPassword);
         passwordForm.resetForm();
+        handleError(t("settingsPage.success"))
       } catch (error) {
-        setError(error.message)
+        if (error.message == "Firebase: Error (auth/invalid-credential).") {
+          passwordForm.setFieldError('oldPassword',t('login.wrongPassword'));
+          return;
+        }
+        handleError(error.message);
       }
     },
-    validate: ({ password, confirmPassword }) => {
+    validate: ({ newPassword, confirmNewPassword,oldPassword }) => {
       const errors: {
+        oldPassword?: string;
         password?: string;
         confirmPassword?: string;
       } = {};
-      if (!password && confirmPassword) {
+      if (!oldPassword) {
+        errors.oldPassword = t("login.required");
+      } else if (oldPassword.length < 6) {
+        errors.oldPassword = t("login.minLen", { min: 6 });
+      }
+      if (!newPassword && confirmNewPassword) {
         errors.password = t("login.required");
-      } else if (password.length < 6) {
+      } else if (newPassword.length < 6) {
         errors.password = t("login.minLen", { min: 6 });
       }
-      if (!confirmPassword) {
+      if (!confirmNewPassword) {
         errors.confirmPassword = t("login.required");
-      } else if (confirmPassword !== password) {
+      } else if (confirmNewPassword !== newPassword) {
         errors.confirmPassword = t("login.passswordMustMatch");
       }
       return errors;
@@ -46,13 +73,12 @@ function Security({ user }: { user: User }) {
   return (
     <ScrollView
       style={{
-        flexGrow: 1,
-        height: "100%",
+        height: "96%",
+        paddingTop: 20,
       }}
     >
       <View
         style={{
-          flexGrow: 1,
           alignItems: "center",
           gap: 40,
         }}
@@ -73,23 +99,25 @@ function Security({ user }: { user: User }) {
             secureTextEntry={secureTextEntry}
             label={t("login.password")}
             error={
-              passwordForm.touched.password && !!passwordForm.errors.password
+              passwordForm.touched.oldPassword &&
+              !!passwordForm.errors.oldPassword
             }
-            value={passwordForm.values.password}
-            onChangeText={passwordForm.handleChange("password")}
-            onBlur={passwordForm.handleBlur("password")}
+            value={passwordForm.values.oldPassword}
+            onChangeText={passwordForm.handleChange("oldPassword")}
+            onBlur={passwordForm.handleBlur("oldPassword")}
           />
-          {passwordForm.touched.password && !!passwordForm.errors.password && (
-            <HelperText
-              style={{
-                position: "absolute",
-                bottom: -25,
-              }}
-              type="error"
-            >
-              {passwordForm.errors.password}
-            </HelperText>
-          )}
+          {passwordForm.touched.oldPassword &&
+            !!passwordForm.errors.oldPassword && (
+              <HelperText
+                style={{
+                  position: "absolute",
+                  bottom: -25,
+                }}
+                type="error"
+              >
+                {passwordForm.errors.oldPassword}
+              </HelperText>
+            )}
         </View>
         <View>
           <TextInput
@@ -98,17 +126,17 @@ function Security({ user }: { user: User }) {
             }}
             mode="outlined"
             secureTextEntry={secureTextEntry}
-            label={t("signin.confirmPassword")}
+            label={t("settingsPage.newPassword")}
             error={
-              passwordForm.touched.confirmPassword &&
-              !!passwordForm.errors.confirmPassword
+              passwordForm.touched.newPassword &&
+              !!passwordForm.errors.newPassword
             }
-            value={passwordForm.values.confirmPassword}
-            onChangeText={passwordForm.handleChange("confirmPassword")}
-            onBlur={passwordForm.handleBlur("confirmPassword")}
+            value={passwordForm.values.newPassword}
+            onChangeText={passwordForm.handleChange("newPassword")}
+            onBlur={passwordForm.handleBlur("newPassword")}
           />
-          {passwordForm.touched.confirmPassword &&
-            !!passwordForm.errors.confirmPassword && (
+          {passwordForm.touched.newPassword &&
+            !!passwordForm.errors.newPassword && (
               <HelperText
                 style={{
                   position: "absolute",
@@ -116,14 +144,45 @@ function Security({ user }: { user: User }) {
                 }}
                 type="error"
               >
-                {passwordForm.errors.confirmPassword}
+                {passwordForm.errors.newPassword}
               </HelperText>
             )}
         </View>
-        <Button disabled={!passwordForm.isValid || passwordForm.isSubmitting}>
-          Create
+        <View>
+          <TextInput
+            style={{
+              width: 250,
+            }}
+            mode="outlined"
+            secureTextEntry={secureTextEntry}
+            label={t("settingsPage.confirmNewPassword")}
+            error={
+              passwordForm.touched.confirmNewPassword &&
+              !!passwordForm.errors.confirmNewPassword
+            }
+            value={passwordForm.values.confirmNewPassword}
+            onChangeText={passwordForm.handleChange("confirmNewPassword")}
+            onBlur={passwordForm.handleBlur("confirmNewPassword")}
+          />
+          {passwordForm.touched.confirmNewPassword &&
+            !!passwordForm.errors.confirmNewPassword && (
+              <HelperText
+                style={{
+                  position: "absolute",
+                  bottom: -25,
+                }}
+                type="error"
+              >
+                {passwordForm.errors.confirmNewPassword}
+              </HelperText>
+            )}
+        </View>
+        <Button
+          onPress={() => passwordForm.handleSubmit()}
+          disabled={!passwordForm.isValid || passwordForm.isSubmitting}
+        >
+          {t("login.changePassword")}
         </Button>
-        <ErrorAlert visible={error} handleClose={() => setError('')} message={error}/>
       </View>
     </ScrollView>
   );

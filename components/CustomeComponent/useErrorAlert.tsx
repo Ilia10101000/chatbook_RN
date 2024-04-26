@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Snackbar, Icon } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import { Snackbar } from "react-native-paper";
 
 function useErrorAlert() {
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +15,7 @@ function useErrorAlert() {
   return { error, setError };
 }
 
-function ErrorAlert({visible, handleClose,message}) {
+function ErrorAlert({ visible, handleClose, message }) {
   return (
     <Snackbar
       visible={visible}

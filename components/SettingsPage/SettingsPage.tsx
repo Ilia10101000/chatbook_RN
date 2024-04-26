@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import { Button, Text } from 'react-native-paper';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/auth';
-import { View, TouchableHighlight, ScrollView } from 'react-native';
-import { useAuthUser } from '../CustomeComponent/useAuthUser';
-import { useTranslation } from 'react-i18next';
-import { CustomeTabComponent } from '../OwnPage/CustomeTabComponent';
-import { PersonalData } from './PersonalData';
-import { Theme } from './Theme';
-import { Security } from './Security';
-import { Account } from './Account';
+import React, { useState } from "react";
+import { Button, Text } from "react-native-paper";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/auth";
+import { View, TouchableHighlight, ScrollView } from "react-native";
+import { useAuthUser } from "../CustomeComponent/useAuthUser";
+import { useTranslation } from "react-i18next";
+import { CustomeTabComponent } from "../OwnPage/CustomeTabComponent";
+import { PersonalData } from "./PersonalData";
+import { Theme } from "./Theme";
+import { Security } from "./Security";
+import { Account } from "./Account";
+import { ErrorAlert, useErrorAlert } from "../CustomeComponent/useErrorAlert";
 
 function SettingsPage() {
-
-  const [page, setPage] = useState('0');
+  const [page, setPage] = useState("0");
   const authUser = useAuthUser();
   const { t } = useTranslation();
+  const { error, setError } = useErrorAlert();
   const buttons = [
     {
       value: "0",
@@ -35,14 +36,18 @@ function SettingsPage() {
     },
   ];
   return (
-    <View style={{flex:1, padding:10}}>
+    <View
+      style={{
+        flex: 1,
+        padding: 10
+      }}
+    >
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           borderRadius: 5,
-          overflow: "hidden" ,
-          marginBottom:20
+          overflow: "hidden",
         }}
       >
         {buttons.map((item) => (
@@ -65,19 +70,27 @@ function SettingsPage() {
         ))}
       </View>
       <CustomeTabComponent index="0" value={page}>
-        <PersonalData user={authUser}/>
+        <PersonalData handleError={() => setError("")} user={authUser} />
       </CustomeTabComponent>
       <CustomeTabComponent index="1" value={page}>
-        <Theme/>
+        <Theme />
       </CustomeTabComponent>
       <CustomeTabComponent index="2" value={page}>
-        <Security user={authUser}/>
+        <Security
+          handleError={(message = "") => setError(message)}
+          user={authUser}
+        />
       </CustomeTabComponent>
       <CustomeTabComponent index="3" value={page}>
-        <Account/>
+        <Account user={authUser} handleError={(message = "") => setError(message)} />
       </CustomeTabComponent>
+      <ErrorAlert
+        visible={error}
+        handleClose={() => setError("")}
+        message={error}
+      />
     </View>
   );
 }
 
-export {SettingsPage}
+export { SettingsPage };

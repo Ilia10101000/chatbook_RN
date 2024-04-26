@@ -18,13 +18,11 @@ import {
   Portal,
   Dialog,
 } from "react-native-paper";
-import { useErrorAlert } from "../CustomeComponent/useErrorAlert";
 import { UserAvatar } from "../CustomeComponent/UserAvatar";
 import { useNavigation } from "@react-navigation/native";
 
-function PersonalData({ user }: { user: User }) {
+function PersonalData({ user, handleError }: { user: User, handleError:(message: string | '') => void }) {
   const navigation = useNavigation()
-  const { error, setError } = useErrorAlert();
   const resetPage = () => {
     navigation.reset({
       index: 0,
@@ -56,7 +54,7 @@ function PersonalData({ user }: { user: User }) {
       try {
         await changeUserName(displayName, user);
       } catch (error) {
-        setError(error.message)
+        handleError(error.message);
       }
     },
   });
@@ -74,7 +72,7 @@ function PersonalData({ user }: { user: User }) {
         handleSaveUserAvatar(result.assets[0].uri);
       }
     } catch (error) {
-      setError(error.message);
+      handleError(error.message);
     }
   };
 
@@ -82,7 +80,7 @@ function PersonalData({ user }: { user: User }) {
     try {
       await deleteUserPhoto(user);
     } catch (error) {
-      setError(error.message)
+      handleError(error.message);
     } finally {
       setShowDeleteDialog(false)
     }
@@ -91,14 +89,14 @@ function PersonalData({ user }: { user: User }) {
     try {
       await saveImage(fsPhotoURL, user);
     } catch (error) {
-      setError(error.message)
+      handleError(error.message);
     } finally {
       resetPage()
     }
   }
   return (
     <ScrollView
-      contentContainerStyle={{ alignItems: "center" }}
+      contentContainerStyle={{ height: '98%', alignItems: "center",paddingTop:20  }}
     >
       <View style={{ marginBottom: 20 }}>
         {user.photoURL ? (
@@ -176,8 +174,10 @@ function PersonalData({ user }: { user: User }) {
       <Button
         disabled={
           (displayNameForm.isValid &&
-          displayNameForm.values.displayName.trim().replace(/\s{2,}/g, " ") ===
-            user.displayName) || displayNameForm.isSubmitting
+            displayNameForm.values.displayName
+              .trim()
+              .replace(/\s{2,}/g, " ") === user.displayName) ||
+          displayNameForm.isSubmitting
         }
         onPress={() => displayNameForm.handleSubmit()}
         buttonColor="#dfe3ee"

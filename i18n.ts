@@ -20,7 +20,7 @@ i18n.use(initReactI18next).init({
           cancel: "Скасувати",
           delete: "Видалити",
           verifyEmail: "Підтвердити електронну адресу",
-
+          wrongPassword: "Невірний пароль",
           loginButton: "Увійти",
           email: "Електронна адреса",
           password: "Пароль",
@@ -71,6 +71,8 @@ i18n.use(initReactI18next).init({
           deleteAccount: "Видалити обліковий запис",
           success: "Оновлення успішне",
           check: "Перевірьте свою електронну пошту",
+          newPassword: "Новий пароль",
+          confirmNewPassword: "Підтвердіть новий пароль",
         },
         error: {
           desc: "Сталася якась помилка",
@@ -79,7 +81,7 @@ i18n.use(initReactI18next).init({
         reloginDialog: {
           dear: "Шановний {{name}}",
           message:
-            "Щоб забезпечити безпеку вашого облікового запису, просимо вас увійтище раз, перш ніж продовжити свою дію.Після входу назад, ви зможете закінчити.",
+            "Для гарантування безпеки вашого облікового запису, просимо вас увійти ще раз у застосунок, перш ніж продовжити свою дію. Після входу назад, ви зможете закінчити.",
           title: "Необхідно авторизуватися ще раз",
           relogin: "Повторний вхід",
         },
@@ -133,6 +135,11 @@ i18n.use(initReactI18next).init({
           month: "Був у мережі {{months}} місяці тому",
           longTimeAgo: "Був у мережі досить давно",
         },
+        account: {
+          signout: "Вийти з облікового запису",
+          deleteAccount: "Видалити обліковий запис",
+          enterPassword: "Введіть пароль облікового запису",
+        },
       },
     },
     eng: {
@@ -152,7 +159,7 @@ i18n.use(initReactI18next).init({
           cancel: "Cancel",
           delete: "Delete",
           verifyEmail: "Verify email",
-
+          wrongPassword: "Wrong password",
           changeEmail: "Change email",
           loginButton: "Login",
           email: "Email",
@@ -202,6 +209,8 @@ i18n.use(initReactI18next).init({
           deleteAccount: "Delete account",
           success: "Update successful",
           check: "Check your email",
+          newPassword: "New password",
+          confirmNewPassword: "Confirm new password",
         },
         error: {
           desc: "Some error occured",
@@ -262,6 +271,11 @@ i18n.use(initReactI18next).init({
           weeks: "Online {{weeks}} weeks ago",
           months: "Online {{months}} months ago",
           longTimeAgo: "Online long time ago",
+        },
+        account: {
+          signout: "Sign out",
+          deleteAccount: "Delete account",
+          enterPassword: "Enter account password",
         },
       },
     },

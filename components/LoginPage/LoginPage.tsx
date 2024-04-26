@@ -10,6 +10,7 @@ import { useErrorAlert } from "../CustomeComponent/useErrorAlert";
 
 function LoginPage() {
   const navigator = useNavigation();
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const { t } = useTranslation();
   const { error, setError } = useErrorAlert();
 
@@ -88,6 +89,14 @@ function LoginPage() {
               width: 250,
             }}
             mode="outlined"
+            right={
+              <TextInput.Icon
+                onPress={() => setSecureTextEntry((value) => !value)}
+                forceTextInputFocus={false}
+                icon={secureTextEntry ? "eye-outline" : "eye-off-outline"}
+              />
+            }
+            secureTextEntry={secureTextEntry}
             error={loginForm.touched.password && !!loginForm.errors.password}
             label={t("login.password")}
             value={loginForm.values.password}

@@ -73,6 +73,7 @@ i18n.use(initReactI18next).init({
           check: "Перевірьте свою електронну пошту",
           newPassword: "Новий пароль",
           confirmNewPassword: "Підтвердіть новий пароль",
+          lang: "Мова",
         },
         error: {
           desc: "Сталася якась помилка",
@@ -86,7 +87,7 @@ i18n.use(initReactI18next).init({
           relogin: "Повторний вхід",
         },
         userPage: {
-          startChat: "Розпочати чат",
+          startChat: "Написати повідомлення",
           publications: "Публікації",
           friends: "Друзів",
           marks: "Позначки",
@@ -113,6 +114,7 @@ i18n.use(initReactI18next).init({
           accept: "Прийняти запит на дружбу",
           cancel: "Скасувати запит на дружбу",
           remove: "Вилучити з друзів",
+          processing: "Обробка",
         },
         messagePage: {
           online: "В мережі",
@@ -211,6 +213,7 @@ i18n.use(initReactI18next).init({
           check: "Check your email",
           newPassword: "New password",
           confirmNewPassword: "Confirm new password",
+          lang: "Language",
         },
         error: {
           desc: "Some error occured",
@@ -224,7 +227,7 @@ i18n.use(initReactI18next).init({
           relogin: "Relogin",
         },
         userPage: {
-          startChat: "Start chat",
+          startChat: "Write a message",
           publications: "Publications",
           marks: "Marks",
           posts: "Posts",
@@ -250,6 +253,7 @@ i18n.use(initReactI18next).init({
           accept: "Accept friend request",
           cancel: "Cancel friend request",
           remove: "Remove from friends",
+          processing: "Processing",
         },
         messagePage: {
           online: "Online",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Image } from "react-native";
+import { View, Image, Pressable } from "react-native";
 import { Text } from "react-native-paper";
 import { UserAvatar } from "../CustomeComponent/UserAvatar";
 import { useObjectVal } from "react-firebase-hooks/database";
@@ -10,6 +10,7 @@ import {
   USERS_D,
 } from "../../firebase_storage_path_constants/firebase_storage_path_constants";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
 
 type IisOnlineSnapShot = {
   isOnline: boolean;
@@ -24,6 +25,7 @@ function HeaderTitle({ displayName, photoURL, userId }) {
   const [lastVisitMessage, setLastVisitMessage] = useState<string>("");
 
   const { t } = useTranslation();
+  const navigation = useNavigation()
 
   useEffect(() => {
     if (!!isOnlineSnapShot?.lastVisit && !isOnlineSnapShot?.isOnline) {
@@ -68,7 +70,13 @@ function HeaderTitle({ displayName, photoURL, userId }) {
         overflow: "hidden",
       }}
     >
+      <Pressable onPress={() => {
+        //@ts-ignore
+        navigation.navigate('UserPage', {userId})
+      }}>
+
       <UserAvatar displayName={displayName} photoURL={photoURL} size={50} />
+      </Pressable>
       <View>
         <Text numberOfLines={1} ellipsizeMode="tail" variant="bodyLarge">
           {displayName}

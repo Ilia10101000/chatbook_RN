@@ -48,7 +48,6 @@ function ChatPage({ route, navigation }) {
       [authUser.uid]: status,
     });
   };
-  console.log(chatData)
 
   const handleSendMessage = async (message: string, imageList: Array<any>) => {
     try {

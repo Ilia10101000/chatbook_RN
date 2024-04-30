@@ -4,6 +4,7 @@ import { FlatList, View, ActivityIndicator, ScrollView } from "react-native";
 import { FriendsListItem } from "./FriendsListItem";
 import { collection, query, where, limit, getDocs } from "firebase/firestore";
 import { useAuthUser } from "../CustomeComponent/useAuthUser";
+import { useNavigation } from "@react-navigation/native";
 import { USERS_D } from "../../firebase_storage_path_constants/firebase_storage_path_constants";
 import { db } from "../../firebase/auth";
 import { useErrorAlert } from "../CustomeComponent/useErrorAlert";
@@ -22,6 +23,7 @@ function FriendsList({ friendsList }: IFriendsList) {
   const [loading, setLoading] = useState(false);
   const { error, setError } = useErrorAlert();
   const { t } = useTranslation();
+  const navigation = useNavigation();
 
   const fetchData = useCallback(
     async (searchQuery: string) => {
@@ -48,6 +50,11 @@ function FriendsList({ friendsList }: IFriendsList) {
     []
   ); 
 
+  const goToUserPage = (userId: string) => {
+    //@ts-ignore
+    navigation.navigate('UserPage', {userId}) 
+  }
+
   useEffect(() => {
     if (textValue) {
       fetchData(textValue);
@@ -72,7 +79,9 @@ function FriendsList({ friendsList }: IFriendsList) {
       <FlatList
         data={dataList}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <FriendsListItem userId={item.id} />}
+        renderItem={({ item }) => (
+          <FriendsListItem handlePress={goToUserPage} userId={item.id} />
+        )}
       />
     );
   }
@@ -80,9 +89,9 @@ function FriendsList({ friendsList }: IFriendsList) {
   return (
     <View>
       <TextInput
+        left={<TextInput.Icon icon={"account-search-outline"} />}
         style={{
           width: "100%",
-          backgroundColor: "#dfe3ee",
           marginBottom: 20,
           marginTop: 10,
         }}

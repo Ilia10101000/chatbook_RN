@@ -7,7 +7,7 @@ import {
   User,
   EmailAuthProvider,
 } from "firebase/auth";
-import { Button } from "react-native-paper";
+import { Button, SegmentedButtons,Icon, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { SignoutDialog } from "./SignoutDialog";
 import { DeleteAccountDialog } from "./DeleteAccountDialog";
@@ -45,6 +45,23 @@ function Account({
 
   return (
     <View style={{ paddingTop: 10, alignItems: "center", gap: 40 }}>
+      <View style={{width:'100%'}}>
+        <Text variant="bodyLarge" style={{alignSelf:'center', marginVertical:10}}>{t("settingsPage.lang")}</Text>
+        <SegmentedButtons
+          value={i18n.language}
+          onValueChange={(value:string) => i18n.changeLanguage(value)}
+          buttons={[
+            {
+              value: "ua",
+              label: "🇺🇦 Українська",
+            },
+            {
+              value: "eng",
+              label: "🇬🇧 English",
+            },
+          ]}
+        />
+      </View>
       <Button
         buttonColor="orange"
         mode="contained"

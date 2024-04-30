@@ -17,11 +17,13 @@ import {
   Button,
   Portal,
   Dialog,
+  useTheme,
 } from "react-native-paper";
 import { UserAvatar } from "../CustomeComponent/UserAvatar";
 import { useNavigation } from "@react-navigation/native";
 
-function PersonalData({ user, handleError }: { user: User, handleError:(message: string | '') => void }) {
+function PersonalData({ user, handleError }: { user: User, handleError: (message: string | '') => void }) {
+  const theme = useTheme();
   const navigation = useNavigation()
   const resetPage = () => {
     navigation.reset({
@@ -112,10 +114,11 @@ function PersonalData({ user, handleError }: { user: User, handleError:(message:
                 position: "absolute",
                 top: 5,
                 right: -30,
-                backgroundColor: "#e1e1e1",
+                backgroundColor: theme.colors.primary,
               }}
               onPress={() => setShowDeleteDialog(true)}
               size="small"
+              color={theme.colors.onPrimary}
             />
           </View>
         ) : (

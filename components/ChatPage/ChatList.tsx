@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Image, Dimensions } from "react-native";
-import { Portal, Modal } from "react-native-paper";
+import { Portal, Modal, useTheme } from "react-native-paper";
 import { ChatListItem } from "./ChatListItem";
 import { useAuthUser } from "../CustomeComponent/useAuthUser";
 import { DocumentData } from "firebase/firestore";
@@ -25,6 +25,7 @@ interface IChatList {
 
 function ChatList({ list, chatData }: IChatList) {
   const authUser = useAuthUser();
+  const theme = useTheme()
   const [showImage, setShowImage] = useState<string | null>(null);
   const [imageDimensions, setImageDimensions] = useState({
     width: 1,
@@ -63,7 +64,7 @@ function ChatList({ list, chatData }: IChatList) {
     setShowImage(uri);
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,paddingHorizontal:3 }}>
       <IOFlatList
         inverted={true}
         data={[...list].reverse()}
@@ -72,6 +73,7 @@ function ChatList({ list, chatData }: IChatList) {
         renderItem={({ item }) => {
           let mesItem = (
             <ChatListItem
+              theme={theme}
               handleImagePress={openImage}
               key={item.id}
               chatId={chatData.id}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableHighlight } from "react-native";
 import { CustomeTabComponent } from "../OwnPage/CustomeTabComponent";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { FriendsList } from "./FriendsList";
 import { FriendsRequests } from "./FriendsRequests";
@@ -11,7 +11,7 @@ type UserList = {id:string}
 interface IUsersList {
   friendsList: Array<UserList>;
   sentFriendsList: Array<UserList>;
-  receivedFriendsRequest: Array<UserList>
+  receivedFriendsRequest: Array<UserList>;
 }
 
 function UsersList({
@@ -19,6 +19,7 @@ function UsersList({
   sentFriendsList,
   receivedFriendsRequest,
 }: IUsersList) {
+  const theme = useTheme()
   const [page, setPage] = useState("0");
   const { t } = useTranslation();
 
@@ -54,12 +55,13 @@ function UsersList({
               padding: 10,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: item.value === page ? "#8b9dc3" : "#dfe3ee",
+              backgroundColor:
+                item.value === page
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
             }}
           >
-            <Text style={{ color: item.value === page ? "#fff" : "#000" }}>
-              {item.label}
-            </Text>
+            <Text style={{ color: theme.colors.onPrimary }}>{item.label}</Text>
           </TouchableHighlight>
         ))}
       </View>

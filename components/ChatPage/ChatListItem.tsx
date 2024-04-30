@@ -2,10 +2,11 @@ import { User } from "firebase/auth";
 import { DocumentData } from "firebase/firestore";
 import React from "react";
 import { Dimensions, Image, Pressable, View } from "react-native";
-import {Icon, Text } from "react-native-paper";
+import { Icon, MD3Theme, Text,withTheme } from "react-native-paper";
 
 interface IMessageItem {
   handleImagePress: (uri: string) => void;
+  theme: MD3Theme;
   authUser: User;
   chatId: string;
   showViewedIcon: boolean;
@@ -23,7 +24,7 @@ interface IMessageItem {
 }
 
 function ChatListItem(props: IMessageItem) {
-  const { doc, user, deleteMessage, showViewedIcon, handleImagePress } = props;
+  const { doc, user, deleteMessage, showViewedIcon, handleImagePress,theme } = props;
 
   const { timestamp, content, senderId, type, id } = doc;
 
@@ -53,8 +54,11 @@ function ChatListItem(props: IMessageItem) {
     messageItem = (
       <Text
         style={{
-          color: senderId === props.authUser.uid ? "#000" : "#fff",
-          maxWidth:'80%'
+          color:
+            senderId === props.authUser.uid
+              ? theme.colors.onPrimary
+              : theme.colors.onSecondary,
+          maxWidth: "80%",
         }}
       >
         {content}
@@ -67,7 +71,9 @@ function ChatListItem(props: IMessageItem) {
         padding: 10,
         paddingBottom: 5,
         backgroundColor:
-          senderId === props.authUser.uid ? "#dfe3ee" : "#8b9dc3",
+          senderId === props.authUser.uid
+            ? theme.colors.primary
+            : theme.colors.secondary,
         alignSelf: senderId === props.authUser.uid ? "flex-end" : "flex-start",
         borderRadius: 5,
         marginVertical: 3,
@@ -75,11 +81,21 @@ function ChatListItem(props: IMessageItem) {
       }}
     >
       {messageItem}
-      <View style={{ flexDirection: "row", gap: 3, alignSelf: "flex-end", alignItems:'center'}}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 3,
+          alignSelf: "flex-end",
+          alignItems: "center",
+        }}
+      >
         {showViewedIcon && <Icon source={"eye"} size={15} />}
         <Text
           style={{
-            color: senderId === props.authUser.uid ? "#8b9dc3" : "#f7f7f7",
+            color:
+              senderId === props.authUser.uid
+                ? theme.colors.onPrimary
+                : theme.colors.onSecondary,
           }}
           variant="labelSmall"
         >

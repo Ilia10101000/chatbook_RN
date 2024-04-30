@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Image, View, Animated } from "react-native";
-import { TextInput, FAB } from "react-native-paper";
+import { TextInput, FAB, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
 
@@ -25,6 +25,7 @@ function ChatFooter({
   const [message, setMessage] = useState("");
   const [imagesForSend, setImagesForSend] = useState([]);
   const { t } = useTranslation();
+  const theme = useTheme()
 
   const pickImage = async () => {
     try {
@@ -80,6 +81,7 @@ function ChatFooter({
             <FAB
               icon={"trash-can"}
               onPress={() => setImagesForSend([])}
+              color={theme.colors.onPrimary}
               style={{
                 width: 40,
                 height: 40,
@@ -88,7 +90,7 @@ function ChatFooter({
                 position: "absolute",
                 top: 5,
                 right: -55,
-                backgroundColor: "#dfe3ee",
+                backgroundColor: theme.colors.primary,
               }}
             />
             {imagesForSend.map((imageData) => (
@@ -108,15 +110,15 @@ function ChatFooter({
       )}
       <TextInput
         style={{
-          backgroundColor: "#dfe3ee",
           maxHeight: 100,
           width: "100%",
+          borderTopColor: '#8c8c8c',
+          borderTopWidth: 1,
         }}
         multiline={true}
-        activeUnderlineColor="#3b5998"
         placeholder={t("messagePage.write")}
         value={message}
-        cursorColor={"#000"}
+        underlineColor="transparent"
         onChangeText={setMessage}
         right={
           (message.trim() || !!imagesForSend.length) && (
@@ -124,6 +126,7 @@ function ChatFooter({
               onPress={handleSendMessage}
               forceTextInputFocus={false}
               icon="send"
+              style={{ alignSelf: "center" }}
             />
           )
         }

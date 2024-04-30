@@ -1,16 +1,19 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import { PaperProvider, Text, ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   NavigationContainer,
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
   ParamListBase,
   RouteProp,
+  useFocusEffect,
 } from "@react-navigation/native";
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
-import { LogBox } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import { HomePage } from "./components/HomePage/HomePage";
 import { LoginPage } from "./components/LoginPage/LoginPage";
 import { SigninPage } from "./components/SigninPage/SigninPage";
@@ -20,6 +23,21 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/auth";
 import { ChatPage } from "./components/ChatPage/ChatPage";
 import { HeaderTitle } from "./components/ChatPage/HeaderTitle";
+import { PreferencesContext } from "./Preferences";
+import { adaptNavigationTheme } from "react-native-paper";
+import { lightTheme, darkTheme } from "./theme";
+import merge from "deepmerge";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserPage } from "./components/UserPage/UserPage";
+import { MiddlewareCheckComponent } from "./firebase/util/MiddlewareCheckComponent";
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+});
+
+const CombinedDefaultTheme = merge(LightTheme, lightTheme);
+const CombinedDarkTheme = merge(DarkTheme, darkTheme);
 
 const Stack = createNativeStackNavigator();
 export const AuthUserContext = createContext<User>(null);
@@ -47,6 +65,13 @@ const authorizedScreens: Array<OptionsParams> = [
     },
   },
   {
+    name: "MiddlewareChecking",
+    component: MiddlewareCheckComponent,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
     name: "ChatPage",
     component: ChatPage,
     options: ({ route, navigation }: any) => {
@@ -59,6 +84,16 @@ const authorizedScreens: Array<OptionsParams> = [
             userId={route.params.user.id}
           />
         ),
+      };
+    },
+  },
+  {
+    name: "UserPage",
+    component: UserPage,
+    options: ({ route, navigation }: any) => {
+      return {
+        headerShown: true,
+        title:''
       };
     },
   },
@@ -76,13 +111,47 @@ const unAuthorizedScreens = [
     component: SigninPage,
     options: {
       headerShown: true,
-      title:''
+      title: "",
     },
   },
 ];
 
+const getThemePreferences = async () => {
+  const theme = await AsyncStorage.getItem("theme");
+  return theme || null;
+};
+
+const setThemePreferences = async (isDark: boolean) => {
+  await AsyncStorage.setItem("theme", isDark ? "dark" : "light");
+};
+
 export default function App() {
   const [authUser, loading, error] = useAuthState(auth);
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  let theme = isDarkTheme ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const toggleTheme = React.useCallback(async () => {
+    await setThemePreferences(!isDarkTheme);
+    setIsDarkTheme((value) => !value);
+  }, [isDarkTheme]);
+
+  const preferences = React.useMemo(
+    () => ({
+      toggleTheme,
+      isDarkTheme,
+    }),
+    [toggleTheme, isDarkTheme]
+  );
+  useEffect(() => {
+    const setStorageThemeMode = async () => {
+      const mode = await getThemePreferences();
+      if (mode && mode == "dark") {
+        setIsDarkTheme(true);
+      }
+    };
+    setStorageThemeMode();
+  }, []);
 
   if (loading) {
     return (
@@ -117,26 +186,32 @@ export default function App() {
 
   return (
     <AuthUserContext.Provider value={authUser}>
-      <PaperProvider>
-        <SafeAreaView
-          style={{
-            flex: 1,
-          }}
-        >
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName={initialRouteName}>
-              {screens.map(({ name, component, options }) => (
-                <Stack.Screen
-                  key={name}
-                  name={name}
-                  component={component}
-                  options={options}
-                />
-              ))}
-            </Stack.Navigator>
+      <PreferencesContext.Provider value={preferences}>
+        <PaperProvider theme={theme}>
+          <StatusBar
+            backgroundColor={isDarkTheme ? "#000" : "#fff"}
+            barStyle={isDarkTheme ? "light-content" : "dark-content"}
+          />
+          <NavigationContainer theme={theme}>
+            <SafeAreaView
+              style={{
+                flex: 1,
+              }}
+            >
+              <Stack.Navigator id={'RootStack'} initialRouteName={initialRouteName}>
+                {screens.map(({ name, component, options }) => (
+                  <Stack.Screen
+                    key={name}
+                    name={name}
+                    component={component}
+                    options={options}
+                  />
+                ))}
+              </Stack.Navigator>
+            </SafeAreaView>
           </NavigationContainer>
-        </SafeAreaView>
-      </PaperProvider>
+        </PaperProvider>
+      </PreferencesContext.Provider>
     </AuthUserContext.Provider>
   );
 }
